@@ -1,66 +1,82 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-      crossorigin="anonymous"
-    />
+    <title>EBookStore Admin - Dashboard</title>
+    <!-- Tailwind Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased min-h-screen">
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-72 bg-slate-900 min-h-screen sticky top-0 p-6 flex flex-col gap-8 shadow-2xl">
+            <a href="/Home/Index" class="flex items-center gap-3 px-2">
+                <div class="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center text-white">
+                    <i class="bi bi-book-half text-xl"></i>
+                </div>
+                <span class="text-xl font-black text-white tracking-tight">EBookStore</span>
+            </a>
 
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
+            <nav class="flex flex-col gap-1">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-4 px-2">Main Menu</p>
+                <a href="/AdminOperations/Dashboard" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-all font-medium">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+                <a href="/AdminOperations/AllOrders" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-all font-medium">
+                    <i class="bi bi-receipt"></i> Orders
+                </a>
+                <a href="/Stock/Index" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-all font-medium">
+                    <i class="bi bi-archive"></i> Stock
+                </a>
+                <a href="/Genre/Index" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-all font-medium">
+                    <i class="bi bi-collection"></i> Genre
+                </a>
+                <a href="/Book/Index" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-all font-medium">
+                    <i class="bi bi-book"></i> Books
+                </a>
+                <a href="/Reports/TopFiveSellingBooks" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-all font-medium">
+                    <i class="bi bi-bar-chart"></i> Analytics
+                </a>
+            </nav>
 
-    <link href="~/BookShoppingCartMvcUI.styles.css" rel="stylesheet" />
-   
-  </head>
-  <body>
-    <div class="main-contaier">
-      <div class="sidenav">
-        <a class="navigation-link" href="/Home/Index"
-          ><i class="bi bi-house-door"></i> Home</a
-        >
-            <a href="/AdminOperations/AllOrders" class="navigation-link"><i class="bi bi-receipt"></i> Orders</a
-        >
-            <a href="/Stock/Index" class="navigation-link"><i class="bi bi-archive"></i> Stock</a
-        >
-            <a href="/Genre/Index" class="navigation-link"><i class="bi bi-collection"></i> Genre</a
-        >
-            <a href="/Book/Index" class="navigation-link"><i class="bi bi-book"></i> Books</a>
-        <a href="/Reports/TopFiveSellingBooks" class="navigation-link"
-          ><i class="bi bi-bar-chart"></i> Top Salling Items</a
-        >
-      </div>
-      <div class="right-panel">
-        <nav class="nav-bar">
-          <div class="nav-heading">Welcome @User.Identity?.Name</div>
-          <div class="nav-actions">
-                    <a href="/Identity/Account/Manage/Index" class="navigation-link"><i class="bi bi-gear"></i> Manage account</a
-            >
-                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-              <button type="submit" class="navigation-link">
-                <i class="bi bi-box-arrow-left"></i> Logout
-              </button>
-            </form>
-          </div>
-        </nav>
-        <div class="content">
-           <div class="my-2">
-            <partial name="_Notifications" />
-           </div>
-            @RenderBody()
+            <div class="mt-auto pt-6 border-t border-slate-800">
+                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-rose-400 hover:text-white hover:bg-rose-500/10 transition-all font-medium text-left">
+                        <i class="bi bi-box-arrow-left"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Right Panel -->
+        <div class="flex-grow flex flex-col">
+            <!-- Header -->
+            <header class="h-20 bg-white border-b border-slate-200 px-8 flex items-center justify-between sticky top-0 z-10">
+                <h2 class="text-lg font-bold text-slate-800">Welcome, @User.Identity?.Name</h2>
+                <div class="flex items-center gap-4">
+                    <a href="/Identity/Account/Manage/Index" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all">
+                        <i class="bi bi-gear-fill"></i>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="p-8 max-w-6xl w-full">
+                <div class="mb-6">
+                    <partial name="_Notifications" />
+                </div>
+                @RenderBody()
+            </main>
         </div>
-      </div>
     </div>
-  </body>
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"
-  ></script>
+</body>
 </html>

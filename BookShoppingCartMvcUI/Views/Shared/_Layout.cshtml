@@ -1,96 +1,100 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>EBookStore - Online book store</title>
-    <link href="/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <title>EBookStore - Premium Online Bookstore</title>
+    <!-- Tailwind Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); }
+    </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/Home/Index">EBookStore</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarColor01">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/Home/Index">
-                            Home
-                            <span class="visually-hidden">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Home/Privacy">Privacy</a>
-                    </li>
-                    @if (User.IsInRole(Roles.Admin.ToString()))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" href="/AdminOperations/Dashboard">Dashboard</a>
-                        </li>
-                       @*  <li class="nav-item">
-                          <a class="nav-link" 
-                          href="/AdminOperations/AllOrders">Orders</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Stock/Index">Stock</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Genre/Index">Genre</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Book/Index">Books</a>
-                        </li> *@
-                    }
-                    
-                    @*<li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Separated link</a>
+<body class="bg-slate-50 text-slate-900 antialiased min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="glass sticky top-0 z-50 border-b border-slate-200/50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/Home/Index" class="flex items-center gap-2 group">
+                        <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-indigo-200 shadow-lg group-hover:scale-110 transition-transform">
+                            <i class="bi bi-book-half text-white text-xl"></i>
                         </div>
-                    </li>*@
-                </ul>
-                <partial name="_LoginPartial" />
+                        <span class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">
+                            EBookStore
+                        </span>
+                    </a>
+                    
+                    <!-- Desktop Nav -->
+                    <div class="hidden md:flex items-center ml-10 space-x-4">
+                        <a href="/Home/Index" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors">Home</a>
+                        <a href="/Home/Privacy" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors">Privacy</a>
+                        
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="h-6 w-px bg-slate-200 mx-2"></div>
+                            <a href="/AdminOperations/Dashboard" class="px-3 py-2 rounded-lg text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-colors">
+                                <i class="bi bi-speedometer2 mr-1"></i> Dashboard
+                            </a>
+                        }
+                    </div>
+                </div>
 
+                <div class="flex items-center gap-4">
+                    <partial name="_LoginPartial" />
+                </div>
             </div>
         </div>
     </nav>
-    <div class="container">
-        <div class="my-2">
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div class="mb-6">
             <partial name="_Notifications" />
         </div>
         @RenderBody()
-    </div>
-</body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-2 opacity-60">
+                    <i class="bi bi-book-half"></i>
+                    <span class="text-sm font-semibold tracking-tight">EBookStore</span>
+                    <span class="text-xs text-slate-400">© 2025 All rights reserved.</span>
+                </div>
+                <div class="flex gap-6">
+                    <a href="#" class="text-slate-400 hover:text-indigo-600 transition-colors"><i class="bi bi-facebook text-lg"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-indigo-600 transition-colors"><i class="bi bi-twitter-x text-lg"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-indigo-600 transition-colors"><i class="bi bi-instagram text-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <script>
         loadCartCount();
         async function loadCartCount() {
             try {
-            var response = await fetch(`/Cart/GetTotalItemInCart`);
-              console.log(response)    
+                var response = await fetch(`/Cart/GetTotalItemInCart`);
                 if (response.status == 200) {
                     var result = await response.json();
                     var cartCountEl = document.getElementById("cartCount");
-                    cartCountEl.innerHTML = result;
+                    if(cartCountEl) cartCountEl.innerHTML = result;
                 }
-            }
-            catch (err) {
+            } catch (err) {
                 console.log(err);
             }
         }
-</script>
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
 </html>
-
-
-@await RenderSectionAsync("Scripts", required: false)
 

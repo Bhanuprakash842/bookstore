@@ -1,46 +1,87 @@
 @model TopNSoldBooksVm
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Sales Analytics";
+}
 
-<h3>Top selling books</h3>
-@if(Model!=null)
-{
-<div>
- <form class="my-2 d-flex" style="gap:5px" asp-action="TopFiveSellingBooks" method="get">
-    <input type="date" style="width: 200px;" class="form-control" name="sDate"/>
-    <input type="date" style="width: 200px;" class="form-control"  name="eDate"/>
-    <button class="btn btn-primary">Filter</button>
-    <a class="btn btn-primary" href="/Reports/TopFiveSellingBooks">Clear</a>
- </form>
+<div class="flex flex-col gap-8">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Sales Analytics</h1>
+            <p class="text-sm text-slate-500 font-medium">Analyze your top-performing books and sales trends</p>
+        </div>
+        
+        <form class="flex gap-2 p-1 bg-white rounded-2xl border border-slate-200 shadow-sm" asp-action="TopFiveSellingBooks" method="get">
+            <div class="flex items-center gap-2 px-2">
+                <input type="date" name="sDate" class="text-sm font-medium text-slate-700 bg-transparent border-none focus:ring-0" />
+                <span class="text-slate-300">to</span>
+                <input type="date" name="eDate" class="text-sm font-medium text-slate-700 bg-transparent border-none focus:ring-0" />
+            </div>
+            <button class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all">
+                Filter
+            </button>
+            <a class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-bold hover:bg-slate-200 transition-all" href="/Reports/TopFiveSellingBooks">
+                Clear
+            </a>
+        </form>
+    </div>
 
- <h4>Showing Results from @Model.StartDate.ToString("dd-MMM-yyyy") to @Model.EndDate.ToString("dd-MMM-yyyy")</h4>
-
- @if(Model.TopNSoldBooks.Count()==0)
- {
-     <div class="my-3" style="font-size:16px; font-weight:bold">
-        No records found
-     </div>
- }
- else
- {
- <table style="width: 50%;" class="table table-striped">
-  <thead>
-    <th>Book</th>
-    <th>Sold Units</th>
-  </thead>
-
-  <tbody>
-    @foreach (var item in Model.TopNSoldBooks)
+    @if(Model != null)
     {
-      <tr>
-       <td>@item.BookName by @item.AuthorName</td>
-       <td>@item.TotalUnitSold</td>
-      </tr>
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600">
+                    <i class="bi bi-trophy-fill text-xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900">Top Selling Books</h2>
+                    <p class="text-xs text-slate-500 font-medium">Performance from @Model.StartDate.ToString("dd MMM yyyy") to @Model.EndDate.ToString("dd MMM yyyy")</p>
+                </div>
+            </div>
+
+            @if(Model.TopNSoldBooks.Count() == 0)
+            {
+                <div class="text-center py-12 border-2 border-dashed border-slate-100 rounded-2xl">
+                    <p class="text-sm font-bold text-slate-400 italic">No sales data found for this period</p>
+                </div>
+            }
+            else
+            {
+                <div class="overflow-hidden rounded-2xl border border-slate-100">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-100">
+                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Book Details</th>
+                                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">Units Sold</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            @foreach (var item in Model.TopNSoldBooks)
+                            {
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm font-bold text-slate-900">@item.BookName</p>
+                                        <p class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">By @item.AuthorName</p>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <span class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-sm font-black">
+                                            <i class="bi bi-bag-check"></i> @item.TotalUnitSold
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
     }
-  </tbody>
- </table>
- }
+    else
+    {
+        <div class="bg-rose-50 border border-rose-100 rounded-2xl p-8 text-center">
+            <i class="bi bi-exclamation-triangle text-rose-500 text-4xl mb-2"></i>
+            <h3 class="text-lg font-bold text-rose-800">Something went wrong</h3>
+            <p class="text-sm text-rose-600">We couldn't load the sales report. Please try again later.</p>
+        </div>
+    }
 </div>
-}
-else
-{
-    <h4>Something went wrong</h4>
-}

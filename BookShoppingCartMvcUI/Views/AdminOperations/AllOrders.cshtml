@@ -1,57 +1,108 @@
-﻿@model IEnumerable<Order>
+@model IEnumerable<Order>
 @{
     Layout = "_AdminLayout";
-    ViewData["Title"] = "AllOrders";
+    ViewData["Title"] = "Order Management";
 }
-<div style="width:100%" class="mt-2">
-    <h4> Orders</h4>
+
+<div class="flex flex-col gap-8">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Order Management</h1>
+            <p class="text-sm text-slate-500 font-medium">Manage and track all customer orders</p>
+        </div>
+        <div class="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-xl text-sm font-bold border border-indigo-100">
+            <i class="bi bi-info-circle"></i>
+            Total Orders: @(Model?.Count() ?? 0)
+        </div>
+    </div>
+
     @if (Model != null && Model.Count() > 0)
     {
-        <table class="table table-striped">
-            <tr>
-                <th>OrderDate</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>MobileNo</th>
-                <th>Address</th>
-                <th>PaymentStatus</th>
-                <th>OrderStatus</th>
-                <th>Actions</th>
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200">
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Date</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Customer</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Contact</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Payment</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @foreach (var order in Model)
+                    {
+                        <tr class="hover:bg-slate-50 transition-colors group">
+                            <td class="px-6 py-4">
+                                <span class="text-sm font-bold text-slate-900 block">@order.CreateDate.ToString("dd MMM yyyy")</span>
+                                <span class="text-[10px] text-slate-400 font-medium">Ref: #ORD-@order.Id</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="text-sm font-bold text-slate-900 block">@order.Name</span>
+                                <span class="text-xs text-slate-500">@order.Address</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-col gap-1">
+                                    <span class="text-xs text-slate-600 font-medium"><i class="bi bi-envelope mr-1 text-slate-400"></i> @order.Email</span>
+                                    <span class="text-xs text-slate-600 font-medium"><i class="bi bi-phone mr-1 text-slate-400"></i> @order.MobileNumber</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-slate-700">@order.PaymentMethod</span>
+                                    @if (order.IsPaid)
+                                    {
+                                        <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-emerald-600">
+                                            <i class="bi bi-patch-check-fill"></i> Paid
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-rose-500">
+                                            <i class="bi bi-clock-history"></i> Unpaid
+                                        </span>
+                                    }
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider @(order.OrderStatus.StatusName == "Cancelled" ? "bg-rose-50 text-rose-600 border border-rose-100" : "bg-indigo-50 text-indigo-600 border border-indigo-100")">
+                                    @order.OrderStatus.StatusName
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <button onclick="document.getElementById('modal-@order.Id').classList.remove('hidden')" 
+                                            class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="View Details">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </button>
+                                    <a asp-action="UpdateOrderStatus" asp-route-orderId="@order.Id" 
+                                       class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-all" title="Update Status">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a asp-action="TogglePaymentStatus" asp-route-orderId="@order.Id" 
+                                       class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all" title="Toggle Payment">
+                                        <i class="bi bi-currency-exchange"></i>
+                                    </a>
+                                </div>
 
-            </tr>
-            @foreach (var order in Model)
-            {
-                <tr>
-                    <td>@order.CreateDate.ToString("dd-MM-yyyy")</td>
-                    <td>@order.Name</td>
-                    <td>@order.MobileNumber</td>
-                    <td>@order.Email</td>
-                    <td>@order.Address</td>
-                    <td>@order.PaymentMethod | @(order.IsPaid ? "Paid" : "Not Paid")</td>
-                    <td>@order.OrderStatus.StatusName</td>
-                    <td>
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#modal-@order.Id" class="btn btn-primary">
-                            Order-Detail
-                        </button>
-                        <a asp-action="UpdateOrderStatus" asp-route-orderId="@order.Id" class="btn btn-info">Change Order Status</a>
-                        <a asp-action="TogglePaymentStatus" asp-route-orderId="@order.Id" class="btn btn-info">Toggle Payment Status</a>
-
-                   @* appending modal div here *@
-                   @* Make sure to put this partial tag inside this td block, otherwise it can cause layout related problem*@
-                   @await Html.PartialAsync("/Views/AdminOperations/_OrderDetailModal.cshtml",new OrderDetailModalDTO{DivId=order.Id.ToString(), OrderDetail=order.OrderDetail})
-                    </td>
-
-                </tr>
-
-            }
-        </table>
-
+                                @await Html.PartialAsync("/Views/AdminOperations/_OrderDetailModal.cshtml", new OrderDetailModalDTO { DivId = order.Id.ToString(), OrderDetail = order.OrderDetail })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
     else
     {
-        <h5>No orders</h5>
+        <div class="text-center py-24 bg-white rounded-3xl border border-dashed border-slate-200">
+            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-200">
+                <i class="bi bi-receipt text-4xl"></i>
+            </div>
+            <h2 class="text-xl font-bold text-slate-900">No orders found</h2>
+            <p class="text-sm text-slate-500">Customer orders will appear here once they are placed.</p>
+        </div>
     }
-
-
 </div>
 

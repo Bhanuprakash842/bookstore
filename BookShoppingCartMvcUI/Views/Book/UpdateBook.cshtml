@@ -1,51 +1,91 @@
-﻿@model BookDTO
+@model BookDTO
 @{
     Layout = "_AdminLayout";
+    ViewData["Title"] = "Update Book";
 }
-<div style="width:50%">
-    <h2> Update Book </h2>
-    <a asp-action="Index" asp-controller="Book" class="btn btn-primary">Back</a>
-    <form asp-action="UpdateBook" enctype="multipart/form-data">
+
+<div class="max-w-2xl">
+    <div class="flex items-center gap-3 mb-8">
+        <a asp-action="Index" asp-controller="Book" class="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-500 hover:text-indigo-600 hover:border-indigo-100 transition-all">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <div>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Update Book</h1>
+            <p class="text-sm text-slate-500 font-medium">Modify existing book details and metadata</p>
+        </div>
+    </div>
+
+    <form asp-action="UpdateBook" enctype="multipart/form-data" class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
         <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="Image" />
 
-        <div class="my-2">
-            <label>Book*</label>
-            <input type="text" class="form-control" asp-for="BookName" />
-            <span asp-validation-for="BookName" class="text-danger"></span>
+        <div class="p-8 space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col gap-2">
+                    <label asp-for="BookName" class="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Book Title*</label>
+                    <input type="text" asp-for="BookName" class="px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all font-medium text-slate-900" />
+                    <span asp-validation-for="BookName" class="text-[10px] font-bold text-rose-500 uppercase tracking-wider"></span>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label asp-for="AuthorName" class="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Author Name*</label>
+                    <input type="text" asp-for="AuthorName" class="px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all font-medium text-slate-900" />
+                    <span asp-validation-for="AuthorName" class="text-[10px] font-bold text-rose-500 uppercase tracking-wider"></span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col gap-2">
+                    <label asp-for="GenreId" class="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Genre*</label>
+                    <select asp-for="GenreId" asp-items="Model.GenreList" class="px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all font-medium text-slate-900 appearance-none cursor-pointer">
+                        <option value="">Select Genre</option>
+                    </select>
+                    <span asp-validation-for="GenreId" class="text-[10px] font-bold text-rose-500 uppercase tracking-wider"></span>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label asp-for="Price" class="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Price ($)*</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                        <input type="number" step="0.01" asp-for="Price" class="w-full pl-8 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all font-medium text-slate-900" />
+                    </div>
+                    <span asp-validation-for="Price" class="text-[10px] font-bold text-rose-500 uppercase tracking-wider"></span>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4 p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Current Book Cover</label>
+                <div class="flex items-start gap-6">
+                    <div class="w-24 h-32 bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden flex-shrink-0">
+                        @if(!string.IsNullOrEmpty(Model.Image))
+                        {
+                            <img src="/images/@Model.Image" class="w-full h-full object-cover" />
+                        }
+                        else
+                        {
+                            <div class="w-full h-full flex items-center justify-center text-slate-200"><i class="bi bi-image text-2xl"></i></div>
+                        }
+                    </div>
+                    <div class="flex-grow space-y-2">
+                        <p class="text-xs font-medium text-slate-500 italic">Upload a new image to replace the current one.</p>
+                        <div class="relative group">
+                            <input type="file" asp-for="ImageFile" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="document.getElementById('file-name').textContent = this.files[0].name" />
+                            <div class="flex items-center gap-3 px-4 py-3 bg-white border border-slate-200 border-dashed rounded-xl group-hover:border-indigo-400 group-hover:bg-indigo-50/30 transition-all">
+                                <div class="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center text-slate-400 shadow-sm border border-slate-100">
+                                    <i class="bi bi-cloud-arrow-up"></i>
+                                </div>
+                                <span id="file-name" class="text-xs font-medium text-slate-500">Choose new cover image...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="my-2">
-            <label>Author*</label>
-            <input type="text" class="form-control" asp-for="AuthorName" />
-            <span asp-validation-for="AuthorName" class="text-danger"></span>
-        </div>
-
-        <div class="my-2">
-            <label>Genre*</label>
-            <select class="form-control" asp-for="GenreId" asp-items="Model.GenreList">
-                <option value="">Select Genre</option>
-            </select>
-            <span asp-validation-for="GenreId" class="text-danger"></span>
-        </div>
-
-        <div class="my-2">
-            <label>Price*</label>
-            <input type="number" class="form-control" asp-for="Price" />
-            <span asp-validation-for="Price" class="text-danger"></span>
-        </div>
-
-        <div class="my-2">
-            <label>Image</label>
-            @if(!string.IsNullOrEmpty(Model.Image))
-            {
-                <img src="/images/@Model.Image" style="width:100px;height:80px"/>
-            }
-            <input type="file" class="form-control" asp-for="ImageFile" />
-        </div>
-
-        <div class="my-2">
-            <button type="submit" class="btn btn-info">Update</button>
+        <div class="bg-slate-50 p-8 border-t border-slate-100 flex justify-end">
+            <button type="submit" class="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all active:scale-95">
+                Save Changes
+            </button>
         </div>
     </form>
 </div>

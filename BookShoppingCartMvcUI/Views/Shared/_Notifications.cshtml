@@ -1,15 +1,25 @@
-﻿@if (TempData["successMessage"] is not null)
+@if (TempData["successMessage"] is not null)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["successMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="flex items-center p-4 mb-4 text-emerald-800 rounded-2xl bg-emerald-50 border border-emerald-100 shadow-sm" role="alert">
+        <i class="bi bi-check-circle-fill mr-3 text-lg"></i>
+        <div class="text-sm font-semibold">
+            @TempData["successMessage"]
+        </div>
+        <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-emerald-50 text-emerald-500 rounded-lg focus:ring-2 focus:ring-emerald-400 p-1.5 hover:bg-emerald-100 inline-flex h-8 w-8" onclick="this.parentElement.remove()">
+            <i class="bi bi-x text-xl"></i>
+        </button>
     </div>
 }
 
 @if (TempData["errorMessage"] is not null)
 {
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @TempData["errorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="flex items-center p-4 mb-4 text-rose-800 rounded-2xl bg-rose-50 border border-rose-100 shadow-sm" role="alert">
+        <i class="bi bi-exclamation-circle-fill mr-3 text-lg"></i>
+        <div class="text-sm font-semibold">
+            @TempData["errorMessage"]
+        </div>
+        <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-rose-50 text-rose-500 rounded-lg focus:ring-2 focus:ring-rose-400 p-1.5 hover:bg-rose-100 inline-flex h-8 w-8" onclick="this.parentElement.remove()">
+            <i class="bi bi-x text-xl"></i>
+        </button>
     </div>
 }

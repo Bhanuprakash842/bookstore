@@ -1,51 +1,96 @@
-﻿@model IEnumerable<Book>
+@model IEnumerable<Book>
 @{
     Layout = "_AdminLayout";
+    ViewData["Title"] = "Book Inventory";
 }
 
-<h2>Books</h2>
+<div class="flex flex-col gap-8">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Book Inventory</h1>
+            <p class="text-sm text-slate-500 font-medium">Manage your collection of books and titles</p>
+        </div>
+        <a asp-action="AddBook" asp-controller="Book" 
+           class="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all active:scale-95">
+            <i class="bi bi-plus-lg"></i> Add New Book
+        </a>
+    </div>
 
-<a asp-action="AddBook" asp-controller="Book" class="btn btn-primary">Add More</a>
-
-@if(Model?.Count()>0)
-{
-    <table class="table table-striped my-2">
-        <tr>
-            <th>Image</th>
-            <th>Book</th>
-            <th>Author</th>
-            <th>Genre</th>
-            <th>Price</th>
-            <th>Action</th>
-        </tr>
-
-        @foreach (var book in Model)
-        {
-            <tr>
-                <td>
-                    @if(string.IsNullOrWhiteSpace(book.Image))
+    @if(Model?.Count() > 0)
+    {
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200">
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Book Preview</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Author & Genre</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Price</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @foreach (var book in Model)
                     {
-                        <img src="/Images/NoImage.png" style="width:80px;height:100px" alt="book image" />
+                        <tr class="hover:bg-slate-50 transition-colors group">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-16 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 border border-slate-100 shadow-sm">
+                                        @if(string.IsNullOrWhiteSpace(book.Image))
+                                        {
+                                            <div class="w-full h-full flex items-center justify-center text-slate-300">
+                                                <i class="bi bi-image text-xl"></i>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <img src="/images/@book.Image" class="w-full h-full object-cover" alt="@book.BookName" />
+                                        }
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">@book.BookName</span>
+                                        <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest">ID: #BK-@book.Id</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-slate-700">@book.AuthorName</span>
+                                    <span class="inline-flex items-center text-[10px] font-bold text-indigo-500 uppercase tracking-wider">
+                                        <i class="bi bi-tag-fill mr-1 opacity-50"></i> @book.Genre.GenreName
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="text-sm font-black text-slate-900">$@book.Price</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <a asp-action="UpdateBook" asp-controller="Book" asp-route-id="@book.Id" 
+                                       class="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all" title="Edit Book">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a asp-action="DeleteBook" asp-controller="Book" asp-route-id="@book.Id" 
+                                       class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-all" 
+                                       onclick="return window.confirm('Are you sure you want to delete this book?')" title="Delete Book">
+                                        <i class="bi bi-trash3"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
                     }
-                    else
-                    {
-                        <img src="/images/@book.Image" style="width:80px;height:100px" alt="book image" />
-                    }
-                </td>
-                <td>@book.BookName</td>
-                <td>@book.AuthorName</td>
-                <td>@book.Genre.GenreName</td>
-                <td>@book.Price</td>
-                <td>
-                    <a asp-action="UpdateBook" asp-controller="Book" asp-route-id="@book.Id" class="btn btn-success">Edit</a>
-                    <a asp-action="DeleteBook" asp-controller="Book" asp-route-id="@book.Id" class="btn btn-danger" onclick="return window.confirm('Are you sure?')">Delete</a>
-                </td>
-            </tr>
-        }
-    </table>
-}
-else
-{
-    <h3>No records</h3>
-}
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-24 bg-white rounded-3xl border border-dashed border-slate-200">
+            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-200">
+                <i class="bi bi-book text-4xl"></i>
+            </div>
+            <h2 class="text-xl font-bold text-slate-900">Inventory is empty</h2>
+            <p class="text-sm text-slate-500">You haven't added any books to your store yet.</p>
+        </div>
+    }
+</div>
 
